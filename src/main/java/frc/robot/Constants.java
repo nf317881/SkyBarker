@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 // Swerve Bot Constants
 public final class Constants {
+
     public static final boolean realBot = true;
     public static final boolean compBot = true;
 
@@ -48,7 +49,7 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 7;
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 8;
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 21;
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = compBot ? -Math.toRadians(340.87 - 180) : -Math.toRadians(55.72265625+180); //237.48046875
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = compBot ? -Math.toRadians(88.41796875+90) : -Math.toRadians(55.72265625+180); //237.48046875 //340.87 - 180
 
     public static final double SLOW_SPEED_MULTIPLIER = .5;
 
@@ -57,12 +58,12 @@ public final class Constants {
     public static final int INTAKE_ANGLE_MOTOR_ID = 10;
     public static final double INTAKE_PACKAGE_POSITION = 90.5;
     public static final double INTAKE_STATION_POSITION = 121;
-    public static final double INTAKE_COLLECT_POSITION = 169;
-    public static final double INTAKE_SPEED_CUBE = .55;
+    public static final double INTAKE_COLLECT_POSITION = 168; //169
+    public static final double INTAKE_SPEED_CUBE = .5;
     public static final double INTAKE_SPEED_CONE = 1;
     public static final int INTAKE_TIMEOUT = 200;
 
-    public static final double INTAKE_OFFSET = compBot ? 248.818 : 127.265625;
+    public static final double INTAKE_OFFSET = compBot ? -8.3 : 127.265625;
     
     // Hopper CAN ID
     public static final int HOPPER_MOTOR = 11;
@@ -108,7 +109,7 @@ public final class Constants {
 
     //Arm motion magic parameters
     public static final double SHOULDER_CRUISEVELOCITY = 16000 * 16;
-    public static final double SHOULDER_ACCEL = 6000 * 16;
+    public static final double SHOULDER_ACCEL = 6000 * 6; // 16 // new 6
 
     public static final double EXTENSION_CRUISEVELOCITY = 16000 * 10;
     public static final double EXTENSION_ACCEL = 6000 * 10;
@@ -123,7 +124,6 @@ public final class Constants {
     public static final int EXTENSION_PID_SLOT = 0;
     public static final int EXTENSION_K_PID_LOOP_IDX = 0;
 
-
     public static final int ELBOW_PID_SLOT = 0;
     public static final int ELBOW_K_PID_LOOP_IDX = 0;
 
@@ -132,8 +132,8 @@ public final class Constants {
     // public static final double SHOULDER_DEGREES_TO_TICKS = -FALCON500_TICKS_PER_REV * 1.3786;
     // public static final double ELBOW_DEGREES_TO_TICKS = BAG_TICKS_PER_REV * 1;
 
-    //Arm motion magic set positions  
-    public static final int ARM_BUMP_LATCH_TIME = 17;  // counts .02 seconds per tik
+    //Arm motion magic set positions
+    public static final int ARM_BUMP_LATCH_TIME = 17;
 
     public static final int ARM_TIMEOUT = 200;
 
@@ -144,6 +144,46 @@ public final class Constants {
 
 
     public static final double GRIPPER_HOLD_POWER = -0.4;
+
+    //Limelight positions, relative to the center of the robot at 0 height(in meters) Assume the intake is the front of the robot
+    public static final double LIMELIGHT_LEFT_LEFTRIGHT_OFFSET = 0.32;
+    public static final double LIMELIGHT_LEFT_FORWARDBACKWARD_OFFSET = 0.045;
+    public static final double LIMELIGHT_LEFT_UPDOWN_OFFSET = 0.38;
+    public static final double LIMELIGHT_LEFT_ROLL_OFFSET = 0;
+    public static final double LIMELIGHT_LEFT_PITCH_OFFSET = 5;
+    public static final double LIMELIGHT_LEFT_YAW_OFFSET= 90;
+
+    public static final double LIMELIGHT_RIGHT_LEFTRIGHT_OFFSET = -0.32;
+    public static final double LIMELIGHT_RIGHT_FORWARDBACKWARD_OFFSET = 0.045;
+    public static final double LIMELIGHT_RIGHT_UPDOWN_OFFSET = 0.38;
+    public static final double LIMELIGHT_RIGHT_ROLL_OFFSET = 0;
+    public static final double LIMELIGHT_RIGHT_PITCH_OFFSET = 5;
+    public static final double LIMELIGHT_RIGHT_YAW_OFFSET = -90;
+
+    //Limelight pipelines
+
+    public static final int PIPELINE_APRILTAG_CLOSE = 0;
+    public static final int PIPELINE_APRILTAG_FAR = 1;
+    public static final int PIPELINE_RETROREFLECTIVE = 2;
+
+    //Autoplace constants
+    public static final double DESIRED_RETROREFLECTIVE_X_RIGHT = 0;
+    public static final double DESIRED_RETROREFLECTIVE_X_LEFT = 0;
+    public static final double RETROREFLECTIVE_X_ALLOWED_ERROR = 3;
+
+    public static final double AUTOPLACE_P = 0.1;
+    public static final double AUTOPLACE_I = 0; //not implemented
+    public static final double AUTOPLACE_D = 0; //not implemented
+
+    public static final double AUTOPLACE_ROTATION_P = 0.15;
+    public static final double AUTOPLACE_ROTATION_I = 0; //not implemented
+    public static final double AUTOPLACE_ROTATION_D = 0; //not implemented
+
+    public static final double AUTOPLACE_DEADBAND = 0.2;
+    public static final double AUTOPLACE_ROTATION_DEADBAND = 0.2;
+
+    //If april tags are enabled
+    public static final boolean ADD_VISION = false;
 
 }
 

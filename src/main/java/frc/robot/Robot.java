@@ -73,6 +73,7 @@ public class Robot extends TimedRobot {
         teleopCommander = new TeleopCommander();
         pigeon = new Pigeon();
         camera = new Camera();
+        Camera.setMode("Retroreflective");
         drivetrain = new Drivetrain();
         autonCommader = new AutonCommader();
         arm = new Arm();

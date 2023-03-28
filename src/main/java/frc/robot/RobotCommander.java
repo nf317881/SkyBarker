@@ -31,4 +31,5 @@ public abstract class RobotCommander {
     public abstract double getGripperCommand();
     public abstract boolean useNegativeSide();
     public abstract ArmBumpDirection getArmBumpDirection();
+    public abstract boolean autoPlace();
 }

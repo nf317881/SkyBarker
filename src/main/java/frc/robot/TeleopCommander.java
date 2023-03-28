@@ -349,7 +349,7 @@ public class TeleopCommander extends RobotCommander{
         } else {
             if (driver.getRightTriggerAxis() > .15) {
                 gripperMotorCommand  = -driver.getRightTriggerAxis();
-            } else if (driver.getLeftTriggerAxis() > .15) {
+            } else if (driver.getYButton()) {
                 gripperMotorCommand  = driver.getLeftTriggerAxis();
             } else {
                 gripperMotorCommand  = operator.getLeftY();
@@ -376,5 +376,9 @@ public class TeleopCommander extends RobotCommander{
         else{
             return false;
         }
+    }
+
+    public boolean autoPlace(){
+        return driver.getLeftTriggerAxis() > .4;
     }
 }

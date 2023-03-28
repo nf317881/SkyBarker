@@ -162,4 +162,10 @@ public class AutonCommader extends RobotCommander{
     public boolean overrideNegSide(){
         return auton.overrideNegSide;
     }
+
+    @Override
+    public boolean autoPlace() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

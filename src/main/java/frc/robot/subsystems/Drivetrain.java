@@ -48,7 +48,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutonCommader;
+import frc.robot.Constants;
 import frc.robot.TeleopCommander;
+import frc.robot.sensors.Camera;
 import frc.robot.sensors.Pigeon;
 
 public class Drivetrain{
@@ -80,6 +82,8 @@ public class Drivetrain{
     static double frontRightPos;
     static double backLeftPos;
     static double backRightPos;
+
+    String loggingVision;
 
     public Drivetrain(){
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -313,7 +317,27 @@ public class Drivetrain{
             setSwerveModuleStates(chassisSpeeds);
         } else if (commander.driver.getPOV() == 180){
             setModulePositions(); 
-        }else {
+        }else if(commander.autoPlace()){
+            double cameraDetection;
+            double goalAngle;
+            //boolean XtrackingEnabled = false;
+            if(Camera.leftTapeDetected()) {
+                cameraDetection = Camera.getLeftX();
+                goalAngle = 90;
+            }else{
+                cameraDetection = Camera.getRightX();
+                goalAngle = -90;
+            }
+            chassisSpeeds =
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                commander.getForwardCommand(), 
+                deadband(((cameraDetection) * Constants.AUTOPLACE_P), Constants.AUTOPLACE_DEADBAND), 
+                /*deadband(Constants.AUTOPLACE_ROTATION_P*(goalAngle-Pigeon.getAngle()), Constants.AUTOPLACE_ROTATION_DEADBAND)*/0,
+                Pigeon.getRotation2d());
+            
+
+            setSwerveModuleStates(chassisSpeeds);
+        }else{
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 commander.getForwardCommand(),
                 commander.getStrafeCommand(),
@@ -437,15 +461,33 @@ public class Drivetrain{
         positions[3].angle = new Rotation2d(backRightModule.getSteerAngle());
         positions[3].distanceMeters = backRightPos;
 
-        // if(Camera.rightAprilDetected()){
-        //     poseEstimator.addVisionMeasurement(Camera.getRightBotPose(), Timer.getFPGATimestamp());
-        // }
+        loggingVision = "Not adding vision";
+        if(Camera.getMode() == "AprilTagClose" || Camera.getMode() == "AprilTagFar" && Constants.ADD_VISION){
+            if(Camera.rightAprilDetected() && Math.abs(Camera.getRightBotPoseRaw()[0]) > 3) {
+                poseEstimator.addVisionMeasurement(Camera.getRightBotPose(), Timer.getFPGATimestamp() - (Camera.getTargetingLatencyRight()/1000) - (Camera.getCaptureLatencyRight()/1000));
+                loggingVision = "Adding right vision";
+            }
+            if(Camera.leftAprilDetected()&& Math.abs(Camera.getLeftBotPoseRaw()[0]) > 3) {
+                poseEstimator.addVisionMeasurement(Camera.getLeftBotPose(), Timer.getFPGATimestamp() - (Camera.getTargetingLatencyLeft()/1000) - (Camera.getCaptureLatencyLeft()/1000));
+                loggingVision = "Adding left vision";
+            }
+        }
+        
 
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), Pigeon.getRotation2d(), positions);
 
         SmartDashboard.putNumber("Estimated Theta", Rotation2d.fromDegrees(Pigeon.getAngle()).getDegrees());
         SmartDashboard.putNumber("Estimated X", poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Estimated Y", poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putString("Vision added to pose", loggingVision);
+    }
+
+    public double deadband(double value, double deadband){
+        if(Math.abs(value) >= Math.abs(deadband)){
+            return value;
+        }else{
+            return 0;
+        }
     }
 }
 
