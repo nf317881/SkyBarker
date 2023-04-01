@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 
 public class Camera {
@@ -59,7 +60,7 @@ public class Camera {
 
         limelightLeft.getEntry("ledMode").setNumber(0);
         limelightRight.getEntry("ledMode").setNumber(0);
-        Alliance color = Alliance.Blue;
+        Alliance color = DriverStation.getAlliance();
 
         if (color == Alliance.Blue) {
             leftBotPose = limelightLeft.getEntry("botpose_wpiblue");

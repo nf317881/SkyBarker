@@ -32,4 +32,5 @@ public abstract class RobotCommander {
     public abstract boolean useNegativeSide();
     public abstract ArmBumpDirection getArmBumpDirection();
     public abstract boolean autoPlace();
+    public abstract boolean getAutoAimStrafe();
 }

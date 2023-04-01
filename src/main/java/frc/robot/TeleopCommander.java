@@ -381,4 +381,9 @@ public class TeleopCommander extends RobotCommander{
     public boolean autoPlace(){
         return driver.getLeftTriggerAxis() > .4;
     }
+
+    @Override
+    public boolean getAutoAimStrafe() {
+        return driver.getRightStickButton();
+    } 
 }

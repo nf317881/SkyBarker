@@ -315,27 +315,42 @@ public class Drivetrain{
                 }
             }
             setSwerveModuleStates(chassisSpeeds);
-        } else if (commander.driver.getPOV() == 180){
-            setModulePositions(); 
+        /*} else if (commander.driver.getPOV() == 180){
+            setModulePositions();  */
         }else if(commander.autoPlace()){
             double cameraDetection;
             double goalAngle;
-            //boolean XtrackingEnabled = false;
-            if(Camera.leftTapeDetected()) {
+            if(Pigeon.getAngle()>0) {
                 cameraDetection = Camera.getLeftX();
                 goalAngle = 90;
             }else{
                 cameraDetection = Camera.getRightX();
                 goalAngle = -90;
             }
-            chassisSpeeds =
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                commander.getForwardCommand(), 
-                deadband(((cameraDetection) * Constants.AUTOPLACE_P), Constants.AUTOPLACE_DEADBAND), 
-                /*deadband(Constants.AUTOPLACE_ROTATION_P*(goalAngle-Pigeon.getAngle()), Constants.AUTOPLACE_ROTATION_DEADBAND)*/0,
-                Pigeon.getRotation2d());
-            
-
+            double aimAngle = Pigeon.getAngle()-goalAngle;
+            double weightFactor = 2.5;
+            if(Math.abs(aimAngle)>10){ //Turn first
+                chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                    commander.getForwardCommand(), 
+                    0, 
+                    deadband(aimAngle * 0.0175*weightFactor, 0.1*weightFactor), 
+                    Pigeon.getRotation2d());
+            }else{//Then line up
+                if(commander.getAutoAimStrafe() || (!Camera.leftTapeDetected() && !Camera.rightTapeDetected())){ //If both dont see anything or strafe command
+                  chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                    commander.getForwardCommand(),
+                    commander.getStrafeCommand(),
+                    deadband(aimAngle * 0.035*weightFactor, 0.1*weightFactor),
+                    Pigeon.getRotation2d());
+                } else { //Else to previous, dont strafe
+                  chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                    commander.getForwardCommand(), 
+                    deadband(cameraDetection * 0.05 *weightFactor, 0.1 *weightFactor), 
+                    deadband(aimAngle * 0.035*weightFactor, 0.1*weightFactor),
+                    Pigeon.getRotation2d());
+                }
+            }
+    
             setSwerveModuleStates(chassisSpeeds);
         }else{
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
